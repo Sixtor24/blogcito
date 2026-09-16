@@ -1,3 +1,5 @@
+import { motion } from "motion/react";
+
 const rows = [
   [
     "DDA",
@@ -27,8 +29,21 @@ const rows = [
 export default function ComparisonTable() {
   return (
     <section className="section comparison" id="comparacion">
-      <div className="eyebrow muted">04 / FRENTE A FRENTE</div>
-      <div className="section-heading">
+      <motion.div
+        className="eyebrow muted"
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        04 / FRENTE A FRENTE
+      </motion.div>
+      <motion.div
+        className="section-heading"
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.45 }}
+      >
         <h2>
           Mismo lienzo.
           <br />
@@ -38,7 +53,7 @@ export default function ComparisonTable() {
           No hay un algoritmo para todo. La figura que quieres dibujar y el
           coste de cada operación determinan la mejor herramienta.
         </p>
-      </div>
+      </motion.div>
       <div className="table-wrap">
         <table>
           <thead>
@@ -59,9 +74,13 @@ export default function ComparisonTable() {
           </thead>
           <tbody>
             {rows.map((row, i) => (
-              <tr
+              <motion.tr
                 key={row[0]}
                 className={`theme-${["dda", "bresenham", "circle"][i]}`}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ delay: i * 0.08, duration: 0.4 }}
               >
                 {row.map((cell, j) => (
                   <td key={j}>
@@ -80,7 +99,7 @@ export default function ComparisonTable() {
                     )}
                   </td>
                 ))}
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>

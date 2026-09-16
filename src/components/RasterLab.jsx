@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { motion } from "motion/react";
 import {
   Play,
   Pause,
@@ -175,7 +176,13 @@ export default function RasterLab() {
   };
   return (
     <section className={`section lab-section theme-${mode}`} id="laboratorio">
-      <div className="lab-title">
+      <motion.div
+        className="lab-title"
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: 0.45 }}
+      >
         <div>
           <div className="eyebrow">05 / APRENDER HACIENDO</div>
           <h2>
@@ -188,8 +195,14 @@ export default function RasterLab() {
           Elige tus coordenadas, aplica los cambios y avanza un píxel a la vez.
           Observa y escucha cada decisión.
         </p>
-      </div>
-      <div className="lab-shell">
+      </motion.div>
+      <motion.div
+        className="lab-shell"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.55, delay: 0.08 }}
+      >
         <div className="lab-toolbar">
           <span className="lab-brand">
             <FlaskConical size={17} /> RASTER <span>/</span> LAB
@@ -224,7 +237,7 @@ export default function RasterLab() {
           parameters={parameters[kind]}
           onApply={apply}
         />
-      </div>
+      </motion.div>
       <p className="lab-tip">
         Un paso, una decisión. Usa las flechas o arrastra el control para
         recorrer cada iteración.

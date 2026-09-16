@@ -3,7 +3,13 @@ import { motion } from "motion/react";
 export default function Introduction() {
   return (
     <section className="introduction section" id="rasterizacion">
-      <div className="section-heading">
+      <motion.div
+        className="section-heading"
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.45 }}
+      >
         <div>
           <div className="eyebrow muted">00 / EL PUNTO DE PARTIDA</div>
           <h2>
@@ -17,7 +23,7 @@ export default function Introduction() {
           píxeles. <strong>Rasterizar es decidir cuáles encender.</strong> Estos
           algoritmos hacen que esa decisión sea simple, rápida y precisa.
         </p>
-      </div>
+      </motion.div>
       <div className="concepts">
         {[
           [

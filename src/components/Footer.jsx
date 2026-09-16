@@ -1,5 +1,8 @@
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 import { Logo } from "./Header";
+
+const AUTHORS = ["Victor Rodriguez", "Edwin Guarisma", "Nicole Herrera"];
+
 export default function Footer() {
   return (
     <>
@@ -21,8 +24,18 @@ export default function Footer() {
         </a>
       </section>
       <footer>
-        <Logo />
-        <span>Un laboratorio para entender lo que ves.</span>
+        <div className="footer-brand">
+          <Logo />
+          <span>Un laboratorio para entender lo que ves.</span>
+        </div>
+        <div className="footer-credits">
+          <span>Desarrollado por</span>
+          <ul>
+            {AUTHORS.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+        </div>
         <a href="#laboratorio">
           Hecho de matemáticas y píxeles <ArrowUpRight size={13} />
         </a>

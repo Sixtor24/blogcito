@@ -1,10 +1,18 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import { Play, Pause, RotateCcw, Code2, Eye, ArrowRight } from "lucide-react";
 import { traces } from "../algorithms";
 import { circleLesson } from "../data/circleLesson";
 import { usePlayback } from "../hooks/usePlayback";
 import { SoundToggle } from "../audio/PixelAudio";
 import PixelGrid from "./PixelGrid";
+import CodePanel from "./CodePanel";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
 export default function AlgorithmSection({ algorithm: a }) {
   const trace = a.id === "circle" ? circleLesson : traces[a.id];
   const playback = usePlayback(trace.length, {
@@ -13,7 +21,13 @@ export default function AlgorithmSection({ algorithm: a }) {
   const [tab, setTab] = useState("visual");
   return (
     <section className={`algorithm-section section theme-${a.id}`} id={a.id}>
-      <div className="algorithm-copy">
+      <motion.div
+        className="algorithm-copy"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.25 }}
+        variants={fadeUp}
+      >
         <div className="eyebrow">
           <span className="chapter-number">{a.number}</span>{" "}
           {a.short.toUpperCase()} /{" "}
@@ -22,6 +36,7 @@ export default function AlgorithmSection({ algorithm: a }) {
         <h2>{a.title}</h2>
         <h3 className="algorithm-subtitle">{a.subtitle}</h3>
         <p>{a.description}</p>
+        <p className="algorithm-purpose">{a.purpose}</p>
         <div className="idea">
           <span /> {a.idea}
         </div>
@@ -41,8 +56,14 @@ export default function AlgorithmSection({ algorithm: a }) {
         <a className="algorithm-link" href="#laboratorio">
           Experimentar en el laboratorio <ArrowRight size={15} />
         </a>
-      </div>
-      <div className="demo">
+      </motion.div>
+      <motion.div
+        className="demo"
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.55, delay: 0.08 }}
+      >
         <div className="demo-tabs">
           <div
             onKeyDown={(event) => {
@@ -87,15 +108,19 @@ export default function AlgorithmSection({ algorithm: a }) {
               onClick={() => setTab("code")}
               className={tab === "code" ? "active" : ""}
             >
-              <Code2 size={14} /> Pseudocódigo
+              <Code2 size={14} /> Código
             </button>
           </div>
           <span className="mono">
-            {a.id === "circle" ? "8× SYMMETRY" : "STEP BY STEP"}
+            {tab === "code"
+              ? "COPIABLE"
+              : a.id === "circle"
+                ? "8× SYMMETRY"
+                : "STEP BY STEP"}
           </span>
         </div>
         <div
-          className="demo-body"
+          className={`demo-body${tab === "code" ? " code-view" : ""}`}
           id={`${a.id}-panel`}
           aria-labelledby={`${a.id}-${tab}-tab`}
           role="tabpanel"
@@ -109,39 +134,32 @@ export default function AlgorithmSection({ algorithm: a }) {
               octants
             />
           ) : (
-            <pre className="code-block">
-              <code>
-                {a.code.split("\n").map((line, i) => (
-                  <span className="code-line" key={i}>
-                    <span>{i + 1}</span>
-                    {line || " "}
-                  </span>
-                ))}
-              </code>
-            </pre>
+            <CodePanel algorithmId={a.id} snippets={a.snippets} />
           )}
         </div>
-        <div className="demo-controls">
-          <SoundToggle />
-          <button className="small-play" onClick={playback.toggle}>
-            {playback.playing ? <Pause size={14} /> : <Play size={14} />}{" "}
-            {playback.playing ? "Pausar" : "Reproducir"}
-          </button>
-          <button
-            className="icon-button"
-            aria-label={`Reiniciar ${a.short}`}
-            onClick={playback.reset}
-          >
-            <RotateCcw size={15} />
-          </button>
-          <span>
-            PASO <b>{String(playback.step + 1).padStart(2, "0")}</b> /{" "}
-            {trace.length}
-          </span>
-          <span className="decision">{trace[playback.step].decision}</span>
-        </div>
+        {tab === "visual" && (
+          <div className="demo-controls">
+            <SoundToggle />
+            <button className="small-play" onClick={playback.toggle}>
+              {playback.playing ? <Pause size={14} /> : <Play size={14} />}{" "}
+              {playback.playing ? "Pausar" : "Reproducir"}
+            </button>
+            <button
+              className="icon-button"
+              aria-label={`Reiniciar ${a.short}`}
+              onClick={playback.reset}
+            >
+              <RotateCcw size={15} />
+            </button>
+            <span>
+              PASO <b>{String(playback.step + 1).padStart(2, "0")}</b> /{" "}
+              {trace.length}
+            </span>
+            <span className="decision">{trace[playback.step].decision}</span>
+          </div>
+        )}
         <p className="demo-note">{a.note}</p>
-      </div>
+      </motion.div>
     </section>
   );
 }
